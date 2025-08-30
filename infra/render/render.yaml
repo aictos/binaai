@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: binaai-web
+    env: node
+    plan: standard
+    rootDir: apps/web
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: NEXT_PUBLIC_SENTRY_DSN
+        sync: false
+      - key: NEXT_PUBLIC_API_BASE_URL
+        sync: false
+    domains:
+      - app.binaai.ai
+      - staging.binaai.ai
+
+  - type: web
+    name: binaai-api
+    env: docker
+    plan: standard
+    dockerfilePath: infra/docker/api.Dockerfile
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_BUCKET_UPLOADS
+        value: uploads
+      - key: SUPABASE_BUCKET_PROCESSED
+        value: processed
+      - key: SUPABASE_BUCKET_PUBLIC
+        value: public-samples

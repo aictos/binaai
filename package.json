@@ -1,0 +1,14 @@
+{
+  "name": "binaai",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm -C apps/web dev",
+    "dev:api": "uvicorn apps.api.main:app --reload",
+    "dev": "concurrently -k \"pnpm:dev:web\" \"pnpm:dev:api\"",
+    "bootstrap": "./scripts/bootstrap.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

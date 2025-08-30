@@ -1,0 +1,29 @@
+name: deploy
+
+on:
+  push:
+    branches: [main, staging]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+    
+    steps:
+      - name: Deploy to Render
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const branch = context.ref.replace('refs/heads/', '');
+            console.log(`Deploying ${branch} branch to Render`);
+            
+            // Render auto-deploys from connected GitHub repo
+            // This job serves as a deployment notification
+            
+            core.info(`Branch ${branch} will be auto-deployed by Render`);
+
+      - name: Notify deployment
+        if: success()
+        run: |
+          echo "Deployment triggered for ${{ github.ref_name }}"
+          echo "Check Render dashboard for deployment status"

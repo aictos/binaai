@@ -1,0 +1,72 @@
+{
+  "id": "sample-pipeline-001",
+  "name": "YOLO + BlazePose Demo",
+  "description": "Object detection followed by pose estimation",
+  "nodes": [
+    {
+      "id": "media-input",
+      "type": "input",
+      "data": {
+        "label": "Media In",
+        "accepts": ["video/mp4", "image/jpeg", "image/png"],
+        "description": "Upload video or image for processing"
+      },
+      "position": { "x": 50, "y": 100 }
+    },
+    {
+      "id": "yolo-detector",
+      "type": "processor",
+      "data": {
+        "label": "ObjectDetect (YOLO)",
+        "processor": "yolo",
+        "model": "yolov8n",
+        "confidence": 0.5,
+        "description": "Detect objects in the media"
+      },
+      "position": { "x": 300, "y": 100 }
+    },
+    {
+      "id": "blazepose-estimator", 
+      "type": "processor",
+      "data": {
+        "label": "PoseEstimate (BlazePose)",
+        "processor": "blazepose",
+        "model": "blazepose_lite",
+        "description": "Estimate human pose landmarks"
+      },
+      "position": { "x": 550, "y": 100 }
+    },
+    {
+      "id": "export-output",
+      "type": "output", 
+      "data": {
+        "label": "Export",
+        "format": "mp4",
+        "quality": "high",
+        "description": "Export processed media"
+      },
+      "position": { "x": 800, "y": 100 }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "media-input",
+      "target": "yolo-detector",
+      "animated": false
+    },
+    {
+      "id": "edge-2", 
+      "source": "yolo-detector",
+      "target": "blazepose-estimator",
+      "animated": false
+    },
+    {
+      "id": "edge-3",
+      "source": "blazepose-estimator", 
+      "target": "export-output",
+      "animated": false
+    }
+  ],
+  "created_at": "2024-01-01T00:00:00Z"
+}
